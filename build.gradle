@@ -33,6 +33,7 @@ sourceSets {
 dependencies {
     	// This dependency is used by the application.
     	implementation 'com.google.guava:guava:28.0-jre'
+      implementation 'com.google.code.gson:gson:2.8.5'
 	compile 'org.hibernate:hibernate-core:5.4.5.Final'
 	compile 'postgresql:postgresql:9.1-901-1.jdbc4'
 	compile 'com.sparkjava:spark-core:2.8.0'
@@ -42,12 +43,12 @@ dependencies {
 jar {
   manifest {
     attributes(
-      'Main-Class': 'example.Main'
+      'Main-Class': 'itemservice.Main'
     )
   }
 }
 
 application {
     // Define the main class for the application
-    mainClassName = 'example.Main'
+    mainClassName = 'Main'
 }

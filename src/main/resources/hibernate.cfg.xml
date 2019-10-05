@@ -9,10 +9,11 @@
 		org.postgresql.Driver
 	</property>
 	<property name="hibernate.connection.url">
-		jdbc:postgresql://localhost:5432/example
+		jdbc:postgresql://localhost:5432/item_db
 	</property>
         <property name="hibernate.connection.username">example</property>
         <property name="hibernate.connection.password">example</property>
-        <mapping resource="person.hbm.xml"/>
+        <mapping resource="item.hbm.xml"/>
+        <mapping resource="itemWarehouse.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
