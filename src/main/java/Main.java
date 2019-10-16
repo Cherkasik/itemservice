@@ -16,7 +16,14 @@ public class Main {
 		exception(Exception.class, (exception, request, response) -> exception.printStackTrace());
 
         // get items
-		get("/api/warehouse/items", (req, res) -> itemService.getItems());
+		get("/api/warehouse/items", (req, res) -> {
+            try {
+                return itemService.getItems();
+            } catch (NullPointerException e) {
+                // TODO: replace for  logger
+                e.printStackTrace();
+            }
+        });
 
         // get item by id
         get("/api/warehouse/items/:itemId", (req, res) ->
@@ -29,29 +36,53 @@ public class Main {
 		);
 
         // add existing items
-        put("api/warehouse/items/:itemId/addition/:amount", (req, res) ->
-            itemService.addExistingItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")))
+        put("api/warehouse/items/:itemId/addition/:amount", (req, res) -> {
+            try {
+                return itemService.addExistingItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
+            } catch (NullPointerException e) {
+                //TODO: replace for logger
+                e.printStackTrace();
+            }
+        }
         );
 
         // change amount of items
-		post("api/warehouse/items/:itemId/change/:amount", (req, res) ->
-            itemService.changeItemAmount(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")))
+		post("api/warehouse/items/:itemId/change/:amount", (req, res) ->{
+            try {
+                return itemService.changeItemAmount(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
+            } catch (NullPointerException e) {
+                //TODO: replace for logger
+                e.printStackTrace();
+            }
+        }
         );
 
         // reserve items
-        post("api/warehouse/items/:itemId/reserve/:amount", (req, res) -> 
-            itemService.reserveItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")))
+        post("api/warehouse/items/:itemId/reserve/:amount", (req, res) -> {
+            try {
+                return itemService.reserveItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
+            } catch (NullPointerException e) {
+                //TODO: replace for logger
+                e.printStackTrace();
+            }
+        }
         );
 
         // release items
-        post("api/warehouse/items/:itemId/release/:amount", (req, res) ->
-            itemService.releaseItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")))
+        post("api/warehouse/items/:itemId/release/:amount", (req, res) -> {
+            try {
+                return itemService.releaseItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
+            } catch (NullPointerException e) {
+                //TODO: replace for logger
+                e.printStackTrace();
+            }
+        }
         );
     }
 
 	private static Long parseLong(String s) {
 		if (s == null || s.equals("") || s.toLowerCase().equals("null")) {
-			return null;
+			throw new NullPointerException('Value is empty or null');
 		}
 		return Long.parseLong(s);
 	}

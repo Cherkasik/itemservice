@@ -23,17 +23,15 @@ public class ItemService {
         Item item = itemDAO.getItemById(itemId);
         if (item != null) {
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(item.getId());
-            return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
+            return new IteDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
         }
-        return null;
+        throw new NullPointerException('Cannot find element by this id');
     }
 
     public List<ItemDTO> getItems() {
         List<Item> items = itemDAO.getItems();
         List<ItemDTO> itemsDTO;
-        if (items == null) {
-            return null;
-        }
+        if (items == null) throw new NullPointerException('Cannot find element by this id');
         return items.stream().map(item -> {
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(item.getId());
             return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
