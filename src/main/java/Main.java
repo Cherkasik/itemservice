@@ -2,15 +2,19 @@ import static spark.Spark.*;
 
 import com.google.gson.Gson;
 import dao.ItemDAO;
+import dao.ItemWarehouseDAO;
 import entity.Item;
 import dto.ItemDTO;
 import service.ItemService;
 import org.apache.log4j.Logger;
 
 public class Main {
-	private static ItemDAO orderDAO = new ItemDAO();
-	private static ItemService itemService = new ItemService(logger);
-    private static final Logger logger = Logger.getLogger(Main.class);
+	private static ItemService itemService = new ItemService(
+        new ItemDAO(new SessionFactoryService(), Logger.getLogger(ItemDAO.class)),
+        new ItemWarehouseDAO(new SessionFactoryService(), Logger.getLogger(ItemWarehouseDAO.class)),
+        Logger.getLogger(ItemService.class)
+        );
+    private Logger logger = Logger.getLogger(Main.class);
 
     public static void main(String[] args) {
     	port(1824);

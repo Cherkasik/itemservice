@@ -8,9 +8,15 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 public class ItemService {
-    private ItemDAO itemDAO = new ItemDAO();
-    private ItemWarehouseDAO itemWarehouseDAO = new ItemWarehouseDAO();
-    private Logger logger = Logger.getLogger(ItemService.class);
+    private ItemDAO itemDAO;
+    private ItemWarehouseDAO itemWarehouseDAO;
+    private Logger logger;
+
+    public ItemService(ItemDAO itemDAO, ItemWarehouseDAO itemWarehouseDAO, Logger logger) {
+        this.itemDAO = itemDAO;
+        this.itemWarehouseDAO = itemWarehouseDAO;
+        this.logger = logger;
+    }
 
     public ItemDTO createItem(ItemDTO itemAdditionDTO) {
         Item item = new Item(itemAdditionDTO);

@@ -10,8 +10,13 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 public class ItemDAO {
-    private SessionFactoryService sfService = new SessionFactoryService();
-    private Logger logger = Logger.getLogger(ItemDAO.class);
+    private SessionFactoryService sfService;
+    private Logger logger;
+
+    public ItemDAO(SessionFactoryService sfService, Logger logger) {
+        this.logger = logger;
+        this.sfService = sfService;
+    }
 
     public List<Item> getItems() {
         Session session = null;
