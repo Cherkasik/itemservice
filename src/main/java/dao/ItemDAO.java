@@ -7,9 +7,11 @@ import org.hibernate.Session;
 import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.log4j.Logger;
 
 public class ItemDAO {
     private SessionFactoryService sfService = new SessionFactoryService();
+    private Logger logger = Logger.getLogger(ItemDAO.class);
 
     public List<Item> getItems() {
         Session session = null;
@@ -23,7 +25,7 @@ public class ItemDAO {
             session.getTransaction().commit();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         finally {
             sfService.closeSession(session);
@@ -44,7 +46,7 @@ public class ItemDAO {
             item = results.isEmpty() ? null : results.get(0);
             session.getTransaction().commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             sfService.closeSession(session);
         }
@@ -59,7 +61,7 @@ public class ItemDAO {
             session.save(obj);
             session.getTransaction().commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e)
         } finally {
             sfService.closeSession(session);
         }

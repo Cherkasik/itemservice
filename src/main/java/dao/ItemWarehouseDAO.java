@@ -7,9 +7,11 @@ import org.hibernate.Session;
 import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.log4j.Logger;
 
 public class ItemWarehouseDAO {
     private SessionFactoryService sfService = new SessionFactoryService();
+    private Logger logger = Logger.getLogger(ItemWarehouseDAO.class);
 
     public ItemWarehouse getItemWarehouseByItemId(long id) {
         Session session = null;
@@ -24,7 +26,7 @@ public class ItemWarehouseDAO {
             itemWarehouse = results.isEmpty() ? null : results.get(0);
             session.getTransaction().commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             sfService.closeSession(session);
         }
@@ -39,7 +41,7 @@ public class ItemWarehouseDAO {
             session.save(obj);
             session.getTransaction().commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             sfService.closeSession(session);
         }
@@ -53,7 +55,7 @@ public class ItemWarehouseDAO {
             session.update(obj);
             session.getTransaction().commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             sfService.closeSession(session);
         }

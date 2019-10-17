@@ -5,10 +5,12 @@ import dao.ItemDAO;
 import entity.Item;
 import dto.ItemDTO;
 import service.ItemService;
+import org.apache.log4j.Logger;
 
 public class Main {
 	private static ItemDAO orderDAO = new ItemDAO();
-	private static ItemService itemService = new ItemService();
+	private static ItemService itemService = new ItemService(logger);
+    private static final Logger logger = Logger.getLogger(Main.class);
 
     public static void main(String[] args) {
     	port(1824);
@@ -20,8 +22,7 @@ public class Main {
             try {
                 return itemService.getItems();
             } catch (NullPointerException e) {
-                // TODO: replace for  logger
-                e.printStackTrace();
+                log.error(e);
             }
         });
 
@@ -40,8 +41,7 @@ public class Main {
             try {
                 return itemService.addExistingItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
             } catch (NullPointerException e) {
-                //TODO: replace for logger
-                e.printStackTrace();
+                log.error(e);
             }
         }
         );
@@ -51,8 +51,7 @@ public class Main {
             try {
                 return itemService.changeItemAmount(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
             } catch (NullPointerException e) {
-                //TODO: replace for logger
-                e.printStackTrace();
+                log.error(e);
             }
         }
         );
@@ -62,8 +61,7 @@ public class Main {
             try {
                 return itemService.reserveItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
             } catch (NullPointerException e) {
-                //TODO: replace for logger
-                e.printStackTrace();
+                log.error(e);
             }
         }
         );
@@ -73,8 +71,7 @@ public class Main {
             try {
                 return itemService.releaseItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
             } catch (NullPointerException e) {
-                //TODO: replace for logger
-                e.printStackTrace();
+                log.error(e);
             }
         }
         );
