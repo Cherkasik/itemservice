@@ -30,6 +30,9 @@ public class ItemDAO {
             session.getTransaction().commit();
         }
         catch (Exception e) {
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
             logger.error(e);
         }
         finally {
@@ -51,6 +54,9 @@ public class ItemDAO {
             item = results.isEmpty() ? null : results.get(0);
             session.getTransaction().commit();
         } catch (Exception e) {
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
             logger.error(e);
         } finally {
             sfService.closeSession(session);
@@ -66,6 +72,9 @@ public class ItemDAO {
             session.save(obj);
             session.getTransaction().commit();
         } catch (Exception e) {
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
             logger.error(e)
         } finally {
             sfService.closeSession(session);

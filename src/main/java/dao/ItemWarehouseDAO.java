@@ -31,6 +31,9 @@ public class ItemWarehouseDAO {
             itemWarehouse = results.isEmpty() ? null : results.get(0);
             session.getTransaction().commit();
         } catch (Exception e) {
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
             logger.error(e);
         } finally {
             sfService.closeSession(session);
@@ -46,6 +49,9 @@ public class ItemWarehouseDAO {
             session.save(obj);
             session.getTransaction().commit();
         } catch (Exception e) {
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
             logger.error(e);
         } finally {
             sfService.closeSession(session);
@@ -60,6 +66,9 @@ public class ItemWarehouseDAO {
             session.update(obj);
             session.getTransaction().commit();
         } catch (Exception e) {
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
             logger.error(e);
         } finally {
             sfService.closeSession(session);
