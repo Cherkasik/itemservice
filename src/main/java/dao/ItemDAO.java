@@ -7,7 +7,7 @@ import org.hibernate.Session;
 import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 public class ItemDAO {
     private SessionFactoryService sfService;
@@ -75,7 +75,7 @@ public class ItemDAO {
             if (session.getTransaction() != null) {
                 session.getTransaction().rollback();
             }
-            logger.error(e)
+            logger.error(e);
         } finally {
             sfService.closeSession(session);
         }

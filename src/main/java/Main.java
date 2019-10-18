@@ -6,15 +6,17 @@ import dao.ItemWarehouseDAO;
 import entity.Item;
 import dto.ItemDTO;
 import service.ItemService;
-import org.apache.log4j.Logger;
+import service.SessionFactoryService;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class Main {
 	private static ItemService itemService = new ItemService(
-        new ItemDAO(new SessionFactoryService(), Logger.getLogger(ItemDAO.class)),
-        new ItemWarehouseDAO(new SessionFactoryService(), Logger.getLogger(ItemWarehouseDAO.class)),
-        Logger.getLogger(ItemService.class)
+        new ItemDAO(new SessionFactoryService(), LogManager.getLogger(ItemDAO.class)),
+        new ItemWarehouseDAO(new SessionFactoryService(), LogManager.getLogger(ItemWarehouseDAO.class)),
+        LogManager.getLogger(ItemService.class)
         );
-    private Logger logger = Logger.getLogger(Main.class);
+    private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
     	port(1824);
@@ -26,7 +28,8 @@ public class Main {
             try {
                 return itemService.getItems();
             } catch (NullPointerException e) {
-                log.error(e);
+                logger.error(e);
+                return "Error" + e;
             }
         });
 
@@ -45,7 +48,8 @@ public class Main {
             try {
                 return itemService.addExistingItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
             } catch (NullPointerException e) {
-                log.error(e);
+                logger.error(e);
+                return "Error" + e;
             }
         }
         );
@@ -55,7 +59,8 @@ public class Main {
             try {
                 return itemService.changeItemAmount(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
             } catch (NullPointerException e) {
-                log.error(e);
+                logger.error(e);
+                return "Error" + e;
             }
         }
         );
@@ -65,7 +70,8 @@ public class Main {
             try {
                 return itemService.reserveItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
             } catch (NullPointerException e) {
-                log.error(e);
+                logger.error(e);
+                return "Error" + e;
             }
         }
         );
@@ -75,7 +81,8 @@ public class Main {
             try {
                 return itemService.releaseItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
             } catch (NullPointerException e) {
-                log.error(e);
+                logger.error(e);
+                return "Error" + e;
             }
         }
         );
@@ -83,7 +90,7 @@ public class Main {
 
 	private static Long parseLong(String s) {
 		if (s == null || s.equals("") || s.toLowerCase().equals("null")) {
-			throw new NullPointerException('Value is empty or null');
+			throw new NullPointerException("Value is empty or null");
 		}
 		return Long.parseLong(s);
 	}
