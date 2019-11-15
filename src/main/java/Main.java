@@ -15,11 +15,12 @@ public class Main {
         new ItemDAO(new SessionFactoryService()),
         new ItemWarehouseDAO(new SessionFactoryService())
         );
-    MessagingService.setupListener(itemService)
     private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
-    	port(1824);
+        MessagingService.setupListener(itemService);
+        
+        port(1824);
 
         // get items
 		get("/api/warehouse/items", (req, res) -> itemService.getItems());
@@ -54,7 +55,7 @@ public class Main {
         // change amount of items
 		post("api/warehouse/items/:itemId/change/:amount", (req, res) ->{
             try {
-                return itemService.changeItemAmount(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
+                return itemService.changeItemAmount(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")), -1);
             } catch (Throwable e) {
                 logger.error(e.getMessage());
                 return "Error" + e.getMessage();
@@ -65,7 +66,7 @@ public class Main {
         // reserve items
         post("api/warehouse/items/:itemId/reserve/:amount", (req, res) -> {
             try {
-                return itemService.reserveItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
+                return itemService.reserveItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")), -1);
             } catch (Throwable e) {
                 logger.error(e.getMessage());
                 return "Error" + e.getMessage();
@@ -76,7 +77,7 @@ public class Main {
         // release items
         post("api/warehouse/items/:itemId/release/:amount", (req, res) -> {
             try {
-                return itemService.releaseItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
+                return itemService.releaseItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")), -1);
             } catch (Throwable e) {
                 logger.error(e.getMessage());
                 return "Error" + e.getMessage();

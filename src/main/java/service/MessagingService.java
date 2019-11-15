@@ -10,7 +10,7 @@ import dto.*;
 import entity.*;
 
 public class MessagingService {
-    private static final Logger logger = LoggerFactory.getLogger(MessagingService.class);
+    private static final Logger logger = LogManager.getLogger(MessagingService.class);
 
     private static final String EXCHANGE_NAME_CHANGE = "changeItemAmount";
     private static final String EXCHANGE_NAME_RELEASE = "reserveItems";
@@ -35,18 +35,18 @@ public class MessagingService {
 
             logger.info(QUEUE_NAME + " waiting for messages");
 
-            DeliverCallback changeCallback = (consumerTag, delivery) -> {
+            DeliverCallback driverCallback = (consumerTag, delivery) -> {
                 try {
                     String message = new String(delivery.getBody(), "UTF-8");
                     logger.info(QUEUE_NAME + " received '" + message + "'");
                     ItemAmountDTO dto = new Gson().fromJson(message, ItemAmountDTO.class);
-                    if (message.type == EXCHANGE_NAME_CHANGE) {
-                        itemService.ChangeItemAmount(dto.getId(), dto.getAmount(), dto.getOrderId());
+                    if (message == EXCHANGE_NAME_CHANGE) {
+                        itemService.changeItemAmount(dto.getId(), dto.getAmount(), dto.getOrderId());
                     }
-                    if (message.type == EXCHANGE_NAME_RESERVE) {
+                    if (message == EXCHANGE_NAME_RESERVE) {
                         itemService.reserveItems(dto.getId(), dto.getAmount(), dto.getOrderId());
                     }
-                    if (message.type == EXCHANGE_NAME_RELEASE) {
+                    if (message == EXCHANGE_NAME_RELEASE) {
                         itemService.releaseItems(dto.getId(), dto.getAmount(), dto.getOrderId());
                     }
                 } finally {
@@ -60,7 +60,7 @@ public class MessagingService {
         }
     }
 
-    public void broadcastResponce (boolean itemAmountChanged, long itemId, String exchangeName, long amount, long orderId) throws Exception {
+    public static void broadcastResponse (boolean itemAmountChanged, long itemId, String exchangeName, long amount, long orderId) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         try (Connection connection = factory.newConnection();
