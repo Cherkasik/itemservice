@@ -6,16 +6,16 @@ import entity.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class ItemService {
     private ItemDAO itemDAO;
     private ItemWarehouseDAO itemWarehouseDAO;
-    private Logger logger;
+    private static final Logger logger = LogManager.getLogger(ItemService.class);
 
-    public ItemService(ItemDAO itemDAO, ItemWarehouseDAO itemWarehouseDAO, Logger logger) {
+    public ItemService(ItemDAO itemDAO, ItemWarehouseDAO itemWarehouseDAO) {
         this.itemDAO = itemDAO;
         this.itemWarehouseDAO = itemWarehouseDAO;
-        this.logger = logger;
     }
 
     public ItemDTO createItem(ItemDTO itemAdditionDTO) {
@@ -27,19 +27,17 @@ public class ItemService {
         return new ItemDTO(item);
     }
 
-    public ItemDTO getItemDTOById(long itemId) {
+    public ItemDTO getItemDTOById(long itemId) throws Throwable {
         Item item = itemDAO.getItemById(itemId);
         if (item != null) {
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(item.getId());
             return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
         }
-        throw new NullPointerException("Cannot find element by this id");
+        throw new Exception("Cannot find element by this id");
     }
 
     public List<ItemDTO> getItems() {
         List<Item> items = itemDAO.getItems();
-        List<ItemDTO> itemsDTO;
-        if (items == null) throw new NullPointerException("Cannot find element by this id");
         return items.stream().map(item -> {
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(item.getId());
             return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
@@ -58,46 +56,54 @@ public class ItemService {
         return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
     }
 
-    public ItemDTO changeItemAmount(long itemId, long amount) {
+    public ItemDTO changeItemAmount(long itemId, long amount, long orderId) {
         Item item = itemDAO.getItemById(itemId);
         ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(itemId);
         if (amount > 0) {
             itemWarehouse.changeAmount(amount);
             itemWarehouseDAO.update(itemWarehouse);
             logger.info("Added " + amount + " items for " + item.getName());
+            MessagingService.broadcastResponse(true, itemId, "changeItemAmount", amount, orderId);
         } else if (amount < 0 && itemWarehouse.getAmount() <= Math.abs(amount)) {
             itemWarehouse.changeAmount(amount);
             itemWarehouseDAO.update(itemWarehouse);
+            releaseItems(Math.abs(amount));
             logger.info("Deleted " + Math.abs(amount) + " items for " + item.getName());
+            MessagingService.broadcastResponse(true, itemId, "changeItemAmount", amount, orderId);
         } else {
             logger.info("Nothing was added");
+            MessagingService.broadcastResponse(true, itemId, "changeItemAmount", amount, orderId);
         }
         return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
     }
 
-    public boolean reserveItems(long itemId, long amount) {
+    public boolean reserveItems(long itemId, long amount, long orderId) {
         Item item = itemDAO.getItemById(itemId);
         ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(itemId);
         if (amount > 0 && itemWarehouse.getAmount() - itemWarehouse.getReservedAmount() >= amount) {
             itemWarehouse.changeReservedAmount(amount);
             itemWarehouseDAO.update(itemWarehouse);
             logger.info("Reserved " + amount + " items for " + item.getName());
+            MessagingService.broadcastResponse(true, itemId, "reserveItems", amount, orderId);
             return true;
         }
         logger.info("Nothing was reserved");
+        MessagingService.broadcastResponse(false, itemId, "reserveItems", amount, orderId);
         return false;
     }
 
-    public boolean releaseItems(long itemId, long amount) {
+    public boolean releaseItems(long itemId, long amount, long orderId) {
         Item item = itemDAO.getItemById(itemId);
         ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(itemId);
         if (amount > 0) {
             itemWarehouse.changeReservedAmount(amount);
             itemWarehouseDAO.update(itemWarehouse);
             logger.info("Released " + amount + " items for " + item.getName());
+            MessagingService.broadcastResponse(true, itemId, "releaseItems", amount, orderId);
             return true;
         }
         logger.info("Nothing was released");
+        MessagingService.broadcastResponse(false, itemId, "releaseItems", amount, orderId);
         return false;
     }
 }

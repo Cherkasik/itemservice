@@ -50,6 +50,7 @@ dependencies {
 	compile 'com.cedarsoftware:json-io:4.10.1'
   compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.12.1'
   compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
+  compile 'com.rabbitmq:amqp-client:5.7.3'
 }
 
 jar {

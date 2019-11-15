@@ -3,39 +3,36 @@ import static spark.Spark.*;
 import com.google.gson.Gson;
 import dao.ItemDAO;
 import dao.ItemWarehouseDAO;
-import entity.Item;
 import dto.ItemDTO;
 import service.ItemService;
 import service.SessionFactoryService;
+import service.MessagingService;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 public class Main {
 	private static ItemService itemService = new ItemService(
-        new ItemDAO(new SessionFactoryService(), LogManager.getLogger(ItemDAO.class)),
-        new ItemWarehouseDAO(new SessionFactoryService(), LogManager.getLogger(ItemWarehouseDAO.class)),
-        LogManager.getLogger(ItemService.class)
+        new ItemDAO(new SessionFactoryService()),
+        new ItemWarehouseDAO(new SessionFactoryService())
         );
+    MessagingService.setupListener(itemService)
     private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
     	port(1824);
 
-		exception(Exception.class, (exception, request, response) -> exception.printStackTrace());
-
         // get items
-		get("/api/warehouse/items", (req, res) -> {
-            try {
-                return itemService.getItems();
-            } catch (NullPointerException e) {
-                logger.error(e);
-                return "Error" + e;
-            }
-        });
+		get("/api/warehouse/items", (req, res) -> itemService.getItems());
 
         // get item by id
-        get("/api/warehouse/items/:itemId", (req, res) ->
-            itemService.getItemDTOById(Long.parseLong(req.params("itemId")))
+        get("/api/warehouse/items/:itemId", (req, res) -> {
+                    try {
+                        return itemService.getItemDTOById(Long.parseLong(req.params("itemId")));
+                    } catch (Throwable e) {
+                        logger.error(e.getMessage());
+                        return "Error" + e.getMessage();
+                    }
+                }
         );
 
         // create new item
@@ -47,9 +44,9 @@ public class Main {
         put("api/warehouse/items/:itemId/addition/:amount", (req, res) -> {
             try {
                 return itemService.addExistingItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
-            } catch (NullPointerException e) {
-                logger.error(e);
-                return "Error" + e;
+            } catch (Throwable e) {
+                logger.error(e.getMessage());
+                return "Error" + e.getMessage();
             }
         }
         );
@@ -58,9 +55,9 @@ public class Main {
 		post("api/warehouse/items/:itemId/change/:amount", (req, res) ->{
             try {
                 return itemService.changeItemAmount(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
-            } catch (NullPointerException e) {
-                logger.error(e);
-                return "Error" + e;
+            } catch (Throwable e) {
+                logger.error(e.getMessage());
+                return "Error" + e.getMessage();
             }
         }
         );
@@ -69,9 +66,9 @@ public class Main {
         post("api/warehouse/items/:itemId/reserve/:amount", (req, res) -> {
             try {
                 return itemService.reserveItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
-            } catch (NullPointerException e) {
-                logger.error(e);
-                return "Error" + e;
+            } catch (Throwable e) {
+                logger.error(e.getMessage());
+                return "Error" + e.getMessage();
             }
         }
         );
@@ -80,17 +77,17 @@ public class Main {
         post("api/warehouse/items/:itemId/release/:amount", (req, res) -> {
             try {
                 return itemService.releaseItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
-            } catch (NullPointerException e) {
-                logger.error(e);
-                return "Error" + e;
+            } catch (Throwable e) {
+                logger.error(e.getMessage());
+                return "Error" + e.getMessage();
             }
         }
         );
     }
 
-	private static Long parseLong(String s) {
+	private static Long parseLong(String s) throws Exception {
 		if (s == null || s.equals("") || s.toLowerCase().equals("null")) {
-			throw new NullPointerException("Value is empty or null");
+			throw new Exception("Value is empty or null");
 		}
 		return Long.parseLong(s);
 	}

@@ -8,13 +8,13 @@ import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class ItemDAO {
     private SessionFactoryService sfService;
-    private Logger logger;
+    private static final Logger logger = LogManager.getLogger(ItemDAO.class);
 
-    public ItemDAO(SessionFactoryService sfService, Logger logger) {
-        this.logger = logger;
+    public ItemDAO(SessionFactoryService sfService) {
         this.sfService = sfService;
     }
 
