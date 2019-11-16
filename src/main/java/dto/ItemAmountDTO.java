@@ -3,14 +3,16 @@ package dto;
 public class ItemAmountDTO {
     private long id;
     private long amount = 0;
-    private long orderId;
+    private Long orderId;
+    private String type;
 
     public ItemAmountDTO() {}
 
-    public ItemAmountDTO(long id, long amount, long orderId) {
+    public ItemAmountDTO(long id, long amount, Long orderId, String type) {
         this.id = id;
         this.amount = amount;
         this.orderId = orderId;
+        this.type = type;
     }
 
     public long getId() {
@@ -33,7 +35,15 @@ public class ItemAmountDTO {
         return this.id;
     }
 
-    private void setOrderId(long id) {
+    private void setOrderId(Long id) {
         this.id = id;
+    }
+
+    public long getType() {
+        return this.type;
+    }
+
+    private void setType(String type) {
+        this.type = type;
     }
 }

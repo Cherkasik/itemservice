@@ -56,7 +56,7 @@ public class ItemService {
         return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
     }
 
-    public ItemDTO changeItemAmount(long itemId, long amount, long orderId) {
+    public ItemDTO changeItemAmount(long itemId, long amount, Long orderId) {
         try {
             Item item = itemDAO.getItemById(itemId);
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(itemId);
@@ -64,25 +64,22 @@ public class ItemService {
                 itemWarehouse.changeAmount(amount);
                 itemWarehouseDAO.update(itemWarehouse);
                 logger.info("Added " + amount + " items for " + item.getName());
-                MessagingService.broadcastResponse(true, itemId, "changeItemAmount", amount, orderId);
             } else if (amount < 0 && itemWarehouse.getAmount() <= Math.abs(amount)) {
                 itemWarehouse.changeAmount(amount);
                 itemWarehouseDAO.update(itemWarehouse);
-                releaseItems(itemId, Math.abs(amount), orderId);
                 logger.info("Deleted " + Math.abs(amount) + " items for " + item.getName());
-                MessagingService.broadcastResponse(true, itemId, "changeItemAmount", amount, orderId);
             } else {
                 logger.info("Nothing was added");
-                MessagingService.broadcastResponse(true, itemId, "changeItemAmount", amount, orderId);
             }
             return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
         } catch (Throwable e) {
             logger.error(e.getMessage());
+            MessagingService.broadcastResponse(itemId, "changingAmountFailed", amount, orderId);
             return new ItemDTO(itemDAO.getItemById(itemId), amount);
         }
     }
 
-    public boolean reserveItems(long itemId, long amount, long orderId) {
+    public boolean reserveItems(long itemId, long amount, Long orderId) {
         try {
             Item item = itemDAO.getItemById(itemId);
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(itemId);
@@ -90,11 +87,10 @@ public class ItemService {
                 itemWarehouse.changeReservedAmount(amount);
                 itemWarehouseDAO.update(itemWarehouse);
                 logger.info("Reserved " + amount + " items for " + item.getName());
-                MessagingService.broadcastResponse(true, itemId, "reserveItems", amount, orderId);
                 return true;
             }
             logger.info("Nothing was reserved");
-            MessagingService.broadcastResponse(false, itemId, "reserveItems", amount, orderId);
+            MessagingService.broadcastResponse(itemId, "reservationFailed", amount, orderId);
             return false;
         } catch (Throwable e) {
             logger.error(e.getMessage());
@@ -102,7 +98,7 @@ public class ItemService {
         }
     }
 
-    public boolean releaseItems(long itemId, long amount, long orderId) {
+    public boolean releaseItems(long itemId, long amount, Long orderId) {
         try {
             Item item = itemDAO.getItemById(itemId);
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(itemId);
@@ -110,11 +106,10 @@ public class ItemService {
                 itemWarehouse.changeReservedAmount(amount);
                 itemWarehouseDAO.update(itemWarehouse);
                 logger.info("Released " + amount + " items for " + item.getName());
-                MessagingService.broadcastResponse(true, itemId, "releaseItems", amount, orderId);
                 return true;
             }
             logger.info("Nothing was released");
-            MessagingService.broadcastResponse(false, itemId, "releaseItems", amount, orderId);
+            MessagingService.broadcastResponse(itemId, "releasingFailed", amount, orderId);
             return false;
         } catch (Throwable e) {
             logger.error(e.getMessage());
