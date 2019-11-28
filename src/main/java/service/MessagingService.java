@@ -42,6 +42,7 @@ public class MessagingService {
                     ItemAmountDTO dto = new Gson().fromJson(message, ItemAmountDTO.class);
                     System.out.println(dto.getType());
                     if (dto.getType() == EXCHANGE_NAME_CHANGE) {
+                        System.out.println("trying to change amount");
                         itemService.changeItemAmount(dto.getId(), dto.getAmount(), dto.getOrderId());
                     }
                     if (dto.getType() == EXCHANGE_NAME_RESERVE) {
