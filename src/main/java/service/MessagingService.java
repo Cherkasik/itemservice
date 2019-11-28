@@ -40,8 +40,8 @@ public class MessagingService {
                     String message = new String(delivery.getBody(), "UTF-8");
                     logger.info(QUEUE_NAME + " received '" + message + "'");
                     ItemAmountDTO dto = new Gson().fromJson(message, ItemAmountDTO.class);
-                    System.out.println("dto type: " + dto.getType());
-                    System.out.println("exchange type: " + EXCHANGE_NAME_CHANGE);
+                    System.out.println("dto type: " + dto.getType() + ".");
+                    System.out.println("exchange type: " + EXCHANGE_NAME_CHANGE + ".");
                     System.out.println("equals?: " + (dto.getType() == EXCHANGE_NAME_CHANGE));
                     if (dto.getType() == EXCHANGE_NAME_CHANGE) {
                         System.out.println("trying to change amount");
