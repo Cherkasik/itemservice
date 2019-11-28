@@ -44,14 +44,14 @@ public class MessagingService {
                     System.out.println("exchange type: " + EXCHANGE_NAME_CHANGE + ".");
                     System.out.println("==?: " + (dto.getType() == EXCHANGE_NAME_CHANGE));
                     System.out.println("equals?: " + dto.getType().equals(EXCHANGE_NAME_CHANGE));
-                    if (dto.getType() == EXCHANGE_NAME_CHANGE) {
+                    if (dto.getType().equals(EXCHANGE_NAME_CHANGE)) {
                         System.out.println("trying to change amount");
                         itemService.changeItemAmount(dto.getId(), dto.getAmount(), dto.getOrderId());
                     };
-                    if (dto.getType() == EXCHANGE_NAME_RESERVE) {
+                    if (dto.getType().equals(EXCHANGE_NAME_RESERVE)) {
                         itemService.reserveItems(dto.getId(), dto.getAmount(), dto.getOrderId());
                     };
-                    if (dto.getType() == EXCHANGE_NAME_RELEASE) {
+                    if (dto.getType().equals(EXCHANGE_NAME_RELEASE)) {
                         itemService.releaseItems(dto.getId(), dto.getAmount(), dto.getOrderId());
                     };
                 } finally {
