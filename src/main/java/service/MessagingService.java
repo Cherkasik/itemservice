@@ -40,7 +40,7 @@ public class MessagingService {
                     String message = new String(delivery.getBody(), "UTF-8");
                     logger.info(QUEUE_NAME + " received '" + message + "'");
                     ItemAmountDTO dto = new Gson().fromJson(message, ItemAmountDTO.class);
-                    console.log(dto.getType());
+                    System.out.println(dto.getType());
                     if (dto.getType() == EXCHANGE_NAME_CHANGE) {
                         itemService.changeItemAmount(dto.getId(), dto.getAmount(), dto.getOrderId());
                     }
