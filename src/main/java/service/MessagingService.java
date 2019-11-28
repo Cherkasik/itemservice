@@ -44,23 +44,23 @@ public class MessagingService {
                     if (dto.getType() == EXCHANGE_NAME_CHANGE) {
                         System.out.println("trying to change amount");
                         itemService.changeItemAmount(dto.getId(), dto.getAmount(), dto.getOrderId());
-                    }
+                    };
                     if (dto.getType() == EXCHANGE_NAME_RESERVE) {
                         itemService.reserveItems(dto.getId(), dto.getAmount(), dto.getOrderId());
-                    }
+                    };
                     if (dto.getType() == EXCHANGE_NAME_RELEASE) {
                         itemService.releaseItems(dto.getId(), dto.getAmount(), dto.getOrderId());
-                    }
+                    };
                 } finally {
                     channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
-                }
+                };
             };
 
             channel.basicConsume(QUEUE_NAME, false, driverCallback, consumerTag -> { });
         } catch(Exception e) {
             logger.error("Failed to setupListener of itemService to listen to requests to it");
-        }
-    }
+        };
+    };
 
     public static void broadcastResponse (long itemId, String exchangeName, long amount, Long orderId) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
