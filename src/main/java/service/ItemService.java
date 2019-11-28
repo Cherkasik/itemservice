@@ -74,7 +74,12 @@ public class ItemService {
             return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
         } catch (Throwable e) {
             logger.error(e.getMessage());
-            MessagingService.broadcastResponse(itemId, "changingAmountFailed", amount, orderId);
+            try {
+                MessagingService.broadcastResponse(itemId, "changingAmountFailed", amount, orderId);
+            }
+            catch (Exception err) {
+                logger.error(err.getMessage());
+            }
             return new ItemDTO(itemDAO.getItemById(itemId), amount);
         }
     }

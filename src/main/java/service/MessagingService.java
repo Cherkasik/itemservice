@@ -12,13 +12,11 @@ import entity.*;
 public class MessagingService {
     private static final Logger logger = LogManager.getLogger(MessagingService.class);
 
-    private static final String EXCHANGE_NAME_CHANGE = "changeItemAmount";
-    private static final String EXCHANGE_NAME_RELEASE = "reserveItems";
-    private static final String EXCHANGE_NAME_RESERVE = "releaseItems";
-    private static final String QUEUE_NAME = "ItemService";
-
     public static void setupListener(ItemService itemService) {
-        String queueName = "ItemService";
+        String EXCHANGE_NAME_CHANGE = "changeItemAmount";
+        String EXCHANGE_NAME_RELEASE = "reserveItems";
+        String EXCHANGE_NAME_RESERVE = "releaseItems";
+        String QUEUE_NAME = "ItemService";
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
@@ -26,6 +24,8 @@ public class MessagingService {
                     Channel channel = connection.createChannel()) {
 
             channel.exchangeDeclare(EXCHANGE_NAME_CHANGE, "direct");
+            channel.exchangeDeclare(EXCHANGE_NAME_RELEASE, "direct");
+            channel.exchangeDeclare(EXCHANGE_NAME_RESERVE, "direct");
 
             channel.queueDeclare(QUEUE_NAME, true, false, false, null);
 
@@ -80,3 +80,11 @@ public class MessagingService {
         }
     }
 }
+
+/*
+finally изменить на что-то
+Переполучение сообщения от Rabbit
+сделать все не static
+одиночное объявления connection, exchangeDeclare
+Все поднять и подергать через рест на паре, видеть все изменения и логи
+*/

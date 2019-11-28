@@ -39,7 +39,7 @@ public class ItemAmountDTO {
         this.id = id;
     }
 
-    public long getType() {
+    public String getType() {
         return this.type;
     }
 
