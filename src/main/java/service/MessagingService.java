@@ -50,7 +50,7 @@ public class MessagingService {
                         System.out.println("dto.getAmount(): " + dto.getAmount());
                         System.out.println("==?: " + (dto.getAmount() == (long)1)); 
                         System.out.println("dto.getId(): " + dto.getId());
-                        itemService.changeItemAmount((long)dto.getId(), (long)dto.getAmount(), (long)dto.getOrderId());
+                        itemService.changeItemAmount(dto.getId(), dto.getAmount(), dto.getOrderId());
                     };
                     if (dto.getType().equals(EXCHANGE_NAME_RESERVE)) {
                         itemService.reserveItems(dto.getId(), dto.getAmount(), dto.getOrderId());
