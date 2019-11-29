@@ -9,6 +9,9 @@ import com.google.gson.Gson;
 import dto.*;
 import entity.*;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
 public class MessagingService implements Runnable {
     private static final Logger logger = LogManager.getLogger(MessagingService.class);
     private ItemService itemService;
@@ -25,9 +28,17 @@ public class MessagingService implements Runnable {
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
-        try (Connection connection = factory.newConnection();
-                    Channel channel = connection.createChannel()) {
-
+        Connection connection;
+        Channel channel;
+        try {
+            connection = factory.newConnection();
+            channel = connection.createChannel();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+        try {
             channel.exchangeDeclare(EXCHANGE_NAME_CHANGE, "direct");
             channel.exchangeDeclare(EXCHANGE_NAME_RELEASE, "direct");
             channel.exchangeDeclare(EXCHANGE_NAME_RESERVE, "direct");
