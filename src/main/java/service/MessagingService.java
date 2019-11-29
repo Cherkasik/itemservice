@@ -12,15 +12,10 @@ import entity.*;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class MessagingService implements Runnable {
+public class MessagingService {
     private static final Logger logger = LogManager.getLogger(MessagingService.class);
-    private ItemService itemService;
 
-    public MessagingService(ItemService itemService) {
-        this.itemService = itemService;
-    };
-
-    public void run() {
+    public static void setupListener(ItemService itemService) {
         String EXCHANGE_NAME_CHANGE = "changeItemAmount";
         String EXCHANGE_NAME_RELEASE = "reserveItems";
         String EXCHANGE_NAME_RESERVE = "releaseItems";
@@ -30,7 +25,7 @@ public class MessagingService implements Runnable {
         factory.setHost("localhost");
         Connection connection;
         Channel channel;
-        
+
         try {
             connection = factory.newConnection();
             channel = connection.createChannel();
@@ -50,17 +45,10 @@ public class MessagingService implements Runnable {
                 try {
                     String message = new String(delivery.getBody(), "UTF-8");
                     logger.info(QUEUE_NAME + " received '" + message + "'");
+                    System.out.println(QUEUE_NAME + " received '" + message + "'");
                     ItemAmountDTO dto = new Gson().fromJson(message, ItemAmountDTO.class);
-                    System.out.println("dto type: " + dto.getType() + ".");
-                    System.out.println("exchange type: " + EXCHANGE_NAME_CHANGE + ".");
-                    System.out.println("==?: " + (dto.getType() == EXCHANGE_NAME_CHANGE));
-                    System.out.println("equals?: " + dto.getType().equals(EXCHANGE_NAME_CHANGE));
+
                     if (dto.getType().equals(EXCHANGE_NAME_CHANGE)) {
-                        System.out.println("trying to change amount");
-                        System.out.println("long: " + (long)1);
-                        System.out.println("dto.getAmount(): " + dto.getAmount());
-                        System.out.println("==?: " + (dto.getAmount() == (long)1)); 
-                        System.out.println("dto.getId(): " + dto.getId());
                         itemService.changeItemAmount(dto.getId(), dto.getAmount(), dto.getOrderId());
                     };
                     if (dto.getType().equals(EXCHANGE_NAME_RESERVE)) {
