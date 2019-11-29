@@ -15,7 +15,7 @@ import java.util.concurrent.TimeoutException;
 public class MessagingService {
     private static final Logger logger = LogManager.getLogger(MessagingService.class);
 
-    public static void setupListener(ItemService itemService) {
+    public void setupListener(ItemService itemService) {
         String EXCHANGE_NAME_CHANGE = "changeItemAmount";
         String EXCHANGE_NAME_RELEASE = "reserveItems";
         String EXCHANGE_NAME_RESERVE = "releaseItems";
@@ -68,7 +68,7 @@ public class MessagingService {
         };
     };
 
-    public static void broadcastResponse (long itemId, String exchangeName, long amount, Long orderId) throws Exception {
+    public void broadcastResponse (long itemId, String exchangeName, long amount, Long orderId) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         try (Connection connection = factory.newConnection();

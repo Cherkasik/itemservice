@@ -11,15 +11,16 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 public class Main {
+    private static final Logger logger = LogManager.getLogger(Main.class);
+    private static MessagingService messagingService = new MessagingService();
 	private static ItemService itemService = new ItemService(
         new ItemDAO(new SessionFactoryService()),
-        new ItemWarehouseDAO(new SessionFactoryService())
+        new ItemWarehouseDAO(new SessionFactoryService()),
+        messagingService,
         );
-    private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
-        MessagingService.setupListener(itemService);
-
+        messagingService.setupListener(itemService);
         port(1824);
 
         // get items

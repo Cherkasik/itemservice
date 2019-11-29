@@ -12,11 +12,13 @@ import com.google.gson.Gson;
 public class ItemService {
     private ItemDAO itemDAO;
     private ItemWarehouseDAO itemWarehouseDAO;
+    private MessagingService messagingService;
     private static final Logger logger = LogManager.getLogger(ItemService.class);
 
-    public ItemService(ItemDAO itemDAO, ItemWarehouseDAO itemWarehouseDAO) {
+    public ItemService(ItemDAO itemDAO, ItemWarehouseDAO itemWarehouseDAO, MessagingService messagingService) {
         this.itemDAO = itemDAO;
         this.itemWarehouseDAO = itemWarehouseDAO;
+        this.messagingService = messagingService;
     }
 
     public String createItem(ItemDTO itemAdditionDTO) {
@@ -78,7 +80,7 @@ public class ItemService {
                 itemWarehouse.changeAmount(amount);
                 itemWarehouseDAO.update(itemWarehouse);
                 logger.info("Added " + amount + " items for " + item.getName());
-            } else if (amount < 0 && itemWarehouse.getAmount() <= Math.abs(amount)) {
+            } else if (amount < 0 && itemWarehouse.getAmount() >= Math.abs(amount)) {
                 itemWarehouse.changeAmount(amount);
                 itemWarehouseDAO.update(itemWarehouse);
                 logger.info("Deleted " + Math.abs(amount) + " items for " + item.getName());
@@ -91,7 +93,7 @@ public class ItemService {
         } catch (Throwable e) {
             logger.error(e.getMessage());
             try {
-                MessagingService.broadcastResponse(itemId, "changingAmountFailed", amount, orderId);
+                messagingService.broadcastResponse(itemId, "changingAmountFailed", amount, orderId);
             }
             catch (Exception err) {
                 logger.error(err.getMessage());
@@ -114,12 +116,12 @@ public class ItemService {
                 return true;
             }
             logger.info("Nothing was reserved");
-            MessagingService.broadcastResponse(itemId, "reservationFailed", amount, orderId);
+            messagingService.broadcastResponse(itemId, "reservationFailed", amount, orderId);
             return false;
         } catch (Throwable e) {
             logger.error(e.getMessage());
             try {
-                MessagingService.broadcastResponse(itemId, "reservationFailed", amount, orderId);
+                messagingService.broadcastResponse(itemId, "reservationFailed", amount, orderId);
             } catch (Exception err) {
                 logger.error(err.getMessage());
             }
@@ -138,12 +140,12 @@ public class ItemService {
                 return true;
             }
             logger.info("Nothing was released");
-            MessagingService.broadcastResponse(itemId, "releasingFailed", amount, orderId);
+            messagingService.broadcastResponse(itemId, "releasingFailed", amount, orderId);
             return false;
         } catch (Throwable e) {
             logger.error(e.getMessage());
             try {
-                MessagingService.broadcastResponse(itemId, "releasingFailed", amount, orderId);
+                messagingService.broadcastResponse(itemId, "releasingFailed", amount, orderId);
             } catch (Exception err) {
                 logger.error(err.getMessage());
             }
