@@ -30,15 +30,10 @@ public class MessagingService implements Runnable {
         factory.setHost("localhost");
         Connection connection;
         Channel channel;
+        
         try {
             connection = factory.newConnection();
             channel = connection.createChannel();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        }
-        try {
             channel.exchangeDeclare(EXCHANGE_NAME_CHANGE, "direct");
             channel.exchangeDeclare(EXCHANGE_NAME_RELEASE, "direct");
             channel.exchangeDeclare(EXCHANGE_NAME_RESERVE, "direct");
