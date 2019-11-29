@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import com.google.gson.Gson;
 
 public class ItemService {
     private ItemDAO itemDAO;
@@ -31,17 +32,21 @@ public class ItemService {
         Item item = itemDAO.getItemById(itemId);
         if (item != null) {
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(item.getId());
-            return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
+            Gson gson = new Gson();
+            String json = gson.toJson(new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount()));
+            return json;
         }
         throw new Exception("Cannot find element by this id");
     }
 
     public List<ItemDTO> getItems() {
         List<Item> items = itemDAO.getItems();
-        return items.stream().map(item -> {
+        Gson gson = new Gson();
+        String json = gson.toJson(items.stream().map(item -> {
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(item.getId());
             return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
-        }).collect(Collectors.toList());
+        }).collect(Collectors.toList()));
+        return json;
     }
 
     public ItemDTO addExistingItems(long itemId, long amount) {
@@ -52,8 +57,11 @@ public class ItemService {
             itemWarehouseDAO.update(itemWarehouse);
             logger.info("Added " + amount + " items for " + item.getName());
         } else {
-            logger.error("Cannot add number below zero");        }
-        return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
+            logger.error("Cannot add number below zero");
+        }
+        Gson gson = new Gson();
+        String json = gson.toJson(new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount()));
+        return json;
     }
 
     public ItemDTO changeItemAmount(long itemId, long amount, Long orderId) {
@@ -74,7 +82,9 @@ public class ItemService {
             } else {
                 logger.info("Nothing was added");
             }
-            return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
+            Gson gson = new Gson();
+            String json = gson.toJson(new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount()));
+            return json;
         } catch (Throwable e) {
             logger.error(e.getMessage());
             try {
@@ -102,6 +112,11 @@ public class ItemService {
             return false;
         } catch (Throwable e) {
             logger.error(e.getMessage());
+            try {
+                MessagingService.broadcastResponse(itemId, "reservationFailed", amount, orderId);
+            } catch (Exception err) {
+                logger.error(err.getMessage());
+            }
             return false;
         }
     }
@@ -111,7 +126,7 @@ public class ItemService {
             Item item = itemDAO.getItemById(itemId);
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(itemId);
             if (amount > 0) {
-                itemWarehouse.changeReservedAmount(amount);
+                itemWarehouse.changeReservedAmount(-amount);
                 itemWarehouseDAO.update(itemWarehouse);
                 logger.info("Released " + amount + " items for " + item.getName());
                 return true;
@@ -121,6 +136,11 @@ public class ItemService {
             return false;
         } catch (Throwable e) {
             logger.error(e.getMessage());
+            try {
+                MessagingService.broadcastResponse(itemId, "releasingFailed", amount, orderId);
+            } catch (Exception err) {
+                logger.error(err.getMessage());
+            }
             return false;
         }
     }
