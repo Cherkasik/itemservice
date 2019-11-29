@@ -16,7 +16,7 @@ public class Main {
 	private static ItemService itemService = new ItemService(
         new ItemDAO(new SessionFactoryService()),
         new ItemWarehouseDAO(new SessionFactoryService()),
-        messagingService,
+        messagingService
         );
 
     public static void main(String[] args) {
