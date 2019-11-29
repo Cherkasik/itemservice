@@ -46,6 +46,9 @@ public class MessagingService {
                     System.out.println("equals?: " + dto.getType().equals(EXCHANGE_NAME_CHANGE));
                     if (dto.getType().equals(EXCHANGE_NAME_CHANGE)) {
                         System.out.println("trying to change amount");
+                        System.out.println("long: " + (long)1);
+                        System.out.println("dto.getAmount(): " + dto.getAmount());
+                        System.out.printls("==?: " + (dto.getAmount() == (long)1)); 
                         itemService.changeItemAmount(dto.getId(), dto.getAmount(), dto.getOrderId());
                     };
                     if (dto.getType().equals(EXCHANGE_NAME_RESERVE)) {
