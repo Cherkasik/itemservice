@@ -59,7 +59,10 @@ public class ItemService {
     public ItemDTO changeItemAmount(long itemId, long amount, Long orderId) {
         try {
             Item item = itemDAO.getItemById(itemId);
+            System.out.println("item: " + item);
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(itemId);
+            System.out.println("itemWarehouse: " + itemWarehouse);
+            System.out.println("amount: " + amount);
             if (amount > 0) {
                 itemWarehouse.changeAmount(amount);
                 itemWarehouseDAO.update(itemWarehouse);

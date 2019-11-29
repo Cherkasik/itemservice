@@ -40,25 +40,34 @@ public class MessagingService {
                     String message = new String(delivery.getBody(), "UTF-8");
                     logger.info(QUEUE_NAME + " received '" + message + "'");
                     ItemAmountDTO dto = new Gson().fromJson(message, ItemAmountDTO.class);
-                    if (dto.getType() == EXCHANGE_NAME_CHANGE) {
+                    System.out.println("dto type: " + dto.getType() + ".");
+                    System.out.println("exchange type: " + EXCHANGE_NAME_CHANGE + ".");
+                    System.out.println("==?: " + (dto.getType() == EXCHANGE_NAME_CHANGE));
+                    System.out.println("equals?: " + dto.getType().equals(EXCHANGE_NAME_CHANGE));
+                    if (dto.getType().equals(EXCHANGE_NAME_CHANGE)) {
+                        System.out.println("trying to change amount");
+                        System.out.println("long: " + (long)1);
+                        System.out.println("dto.getAmount(): " + dto.getAmount());
+                        System.out.println("==?: " + (dto.getAmount() == (long)1)); 
+                        System.out.println("dto.getId(): " + dto.getId());
                         itemService.changeItemAmount(dto.getId(), dto.getAmount(), dto.getOrderId());
-                    }
-                    if (dto.getType() == EXCHANGE_NAME_RESERVE) {
+                    };
+                    if (dto.getType().equals(EXCHANGE_NAME_RESERVE)) {
                         itemService.reserveItems(dto.getId(), dto.getAmount(), dto.getOrderId());
-                    }
-                    if (dto.getType() == EXCHANGE_NAME_RELEASE) {
+                    };
+                    if (dto.getType().equals(EXCHANGE_NAME_RELEASE)) {
                         itemService.releaseItems(dto.getId(), dto.getAmount(), dto.getOrderId());
-                    }
+                    };
                 } finally {
                     channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
-                }
+                };
             };
 
             channel.basicConsume(QUEUE_NAME, false, driverCallback, consumerTag -> { });
         } catch(Exception e) {
             logger.error("Failed to setupListener of itemService to listen to requests to it");
-        }
-    }
+        };
+    };
 
     public static void broadcastResponse (long itemId, String exchangeName, long amount, Long orderId) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
