@@ -9,10 +9,15 @@ import com.google.gson.Gson;
 import dto.*;
 import entity.*;
 
-public class MessagingService {
+public class MessagingService implements Runnable {
     private static final Logger logger = LogManager.getLogger(MessagingService.class);
+    private ItemService itemService;
 
-    public static void setupListener(ItemService itemService) {
+    public MessagingService(ItemService itemService) {
+        this.itemService = itemService;
+    };
+
+    public void run() {
         String EXCHANGE_NAME_CHANGE = "changeItemAmount";
         String EXCHANGE_NAME_RELEASE = "reserveItems";
         String EXCHANGE_NAME_RESERVE = "releaseItems";

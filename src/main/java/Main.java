@@ -18,8 +18,11 @@ public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
-        MessagingService.setupListener(itemService);
-        
+        //MessagingService.setupListener(itemService);
+        MessagingService messagingService = new MessagingService(itemService);
+        Thread listener = new Thread(messagingService);
+        listener.start();
+
         port(1824);
 
         // get items

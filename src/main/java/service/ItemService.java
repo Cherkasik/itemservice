@@ -19,16 +19,19 @@ public class ItemService {
         this.itemWarehouseDAO = itemWarehouseDAO;
     }
 
-    public ItemDTO createItem(ItemDTO itemAdditionDTO) {
+    public String createItem(ItemDTO itemAdditionDTO) {
         Item item = new Item(itemAdditionDTO);
         ItemWarehouse itemWarehouse = new ItemWarehouse(item);
         itemDAO.save(item);
         itemWarehouseDAO.save(itemWarehouse);
         logger.info("Created item " + itemAdditionDTO.getName());
-        return new ItemDTO(item);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(new ItemDTO(item));
+        return json;
     }
 
-    public ItemDTO getItemDTOById(long itemId) throws Throwable {
+    public String getItemDTOById(long itemId) throws Throwable {
         Item item = itemDAO.getItemById(itemId);
         if (item != null) {
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(item.getId());
@@ -39,7 +42,7 @@ public class ItemService {
         throw new Exception("Cannot find element by this id");
     }
 
-    public List<ItemDTO> getItems() {
+    public String getItems() {
         List<Item> items = itemDAO.getItems();
         Gson gson = new Gson();
         String json = gson.toJson(items.stream().map(item -> {
@@ -49,7 +52,7 @@ public class ItemService {
         return json;
     }
 
-    public ItemDTO addExistingItems(long itemId, long amount) {
+    public String addExistingItems(long itemId, long amount) {
         Item item = itemDAO.getItemById(itemId);
         ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(itemId);
         if (amount > 0) {
@@ -64,7 +67,7 @@ public class ItemService {
         return json;
     }
 
-    public ItemDTO changeItemAmount(long itemId, long amount, Long orderId) {
+    public String changeItemAmount(long itemId, long amount, Long orderId) {
         try {
             Item item = itemDAO.getItemById(itemId);
             System.out.println("item: " + item);
@@ -93,7 +96,10 @@ public class ItemService {
             catch (Exception err) {
                 logger.error(err.getMessage());
             }
-            return new ItemDTO(itemDAO.getItemById(itemId), amount);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(new ItemDTO(itemDAO.getItemById(itemId), amount));
+            return json;
         }
     }
 
