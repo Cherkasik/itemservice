@@ -21,7 +21,7 @@ public class ItemDTO {
         this.id = item.getId();
         this.name = item.getName();
         this.price = item.getPrice();
-        this.amount = 0;
+        this.amount = amount;
     }
 
     public long getId() {
