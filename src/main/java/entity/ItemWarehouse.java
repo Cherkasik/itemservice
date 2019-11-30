@@ -1,6 +1,7 @@
 package entity;
 
 import entity.Item;
+import dto.ItemDTO;
 
 public class ItemWarehouse {
     private long id;
@@ -12,6 +13,12 @@ public class ItemWarehouse {
     public ItemWarehouse(Item item) {
         this.id = item.getId();
         this.amount = 0;
+        this.reservedAmount = 0;
+    }
+
+    public ItemWarehouse(ItemDTO itemDTO) {
+        this.id = itemDTO.getId();
+        this.amount = itemDTO.getAmount();
         this.reservedAmount = 0;
     }
 

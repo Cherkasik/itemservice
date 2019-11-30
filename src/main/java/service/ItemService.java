@@ -23,7 +23,7 @@ public class ItemService {
 
     public String createItem(ItemDTO itemAdditionDTO) {
         Item item = new Item(itemAdditionDTO);
-        ItemWarehouse itemWarehouse = new ItemWarehouse(item, itemAdditionDTO.getAmount());
+        ItemWarehouse itemWarehouse = new ItemWarehouse(itemAdditionDTO);
         itemDAO.save(item);
         itemWarehouseDAO.save(itemWarehouse);
         logger.info("Created item " + itemAdditionDTO.getName());
@@ -46,7 +46,8 @@ public class ItemService {
 
     public String getItems() {
         List<Item> items = itemDAO.getItems();
-        List<ItemDTO> itemList = items.stream().map(item -> {
+        Gson gson = new Gson();
+        String json = gson.toJson(items.stream().map(item -> {
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(item.getId());
             return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
         }).collect(Collectors.toList()));
