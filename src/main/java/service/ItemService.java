@@ -51,6 +51,7 @@ public class ItemService {
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(item.getId());
             return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
         }).collect(Collectors.toList()));
+        System.out.println(json);
         return json;
     }
 
