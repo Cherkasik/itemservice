@@ -46,12 +46,12 @@ public class ItemService {
 
     public String getItems() {
         List<Item> items = itemDAO.getItems();
-        Gson gson = new Gson();
-        String json = gson.toJson(items.stream().map(item -> {
+        List<ItemDTO> itemList = items.stream().map(item -> {
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(item.getId());
             return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
-        }).collect(Collectors.toList()));
-        System.out.println(json);
+        }).collect(Collectors.toList());
+        Gson gson = new Gson();
+        String json = gson.toJson(itemList);
         return json;
     }
 
