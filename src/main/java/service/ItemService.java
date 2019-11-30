@@ -23,7 +23,7 @@ public class ItemService {
 
     public String createItem(ItemDTO itemAdditionDTO) {
         Item item = new Item(itemAdditionDTO);
-        ItemWarehouse itemWarehouse = new ItemWarehouse(item);
+        ItemWarehouse itemWarehouse = new ItemWarehouse(item, itemAdditionDTO.getAmount());
         itemDAO.save(item);
         itemWarehouseDAO.save(itemWarehouse);
         logger.info("Created item " + itemAdditionDTO.getName());
