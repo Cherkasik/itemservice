@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 public class ItemWarehouseDTO {
     private long id;
-    private long itemId;
     private long amount = 0;
     private long reservedAmount = 0;
 
@@ -13,7 +12,6 @@ public class ItemWarehouseDTO {
 
     public ItemWarehouseDTO(ItemWarehouse itemWarehouse) {
         this.id = itemWarehouse.getId();
-        this.itemId = itemWarehouse.getItemId();
         this.amount = itemWarehouse.getAmount();
         this.reservedAmount = itemWarehouse.getAmount();
     }
@@ -24,14 +22,6 @@ public class ItemWarehouseDTO {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getItemId() {
-        return this.itemId;
-    }
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
     }
 
     public long getAmount() {

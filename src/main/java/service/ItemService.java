@@ -49,9 +49,7 @@ public class ItemService {
         List<ItemDTO> itemList = items.stream().map(item -> {
             ItemWarehouse itemWarehouse = itemWarehouseDAO.getItemWarehouseByItemId(item.getId());
             return new ItemDTO(item, itemWarehouse.getAmount() - itemWarehouse.getReservedAmount());
-        }).collect(Collectors.toList());
-        Gson gson = new Gson();
-        String json = gson.toJson(itemList);
+        }).collect(Collectors.toList()));
         return json;
     }
 

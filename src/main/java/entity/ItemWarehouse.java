@@ -4,7 +4,6 @@ import entity.Item;
 
 public class ItemWarehouse {
     private long id;
-    private long itemId;
     private long amount = 0;
     private long reservedAmount = 0;
 
@@ -12,21 +11,18 @@ public class ItemWarehouse {
 
     public ItemWarehouse(Item item) {
         this.id = item.getId();
-        this.itemId = item.getId();
         this.amount = 0;
         this.reservedAmount = 0;
     }
 
     public ItemWarehouse(Item item, long amount, long reservedAmount) {
         this.id = item.getId();
-        this.itemId = item.getId();
         this.amount = amount;
         this.reservedAmount = reservedAmount;
     }
 
     public ItemWarehouse(Item item, long amount) {
         this.id = item.getId();
-        this.itemId = item.getId();
         this.amount = amount;
         this.reservedAmount = 0;
     }
@@ -37,14 +33,6 @@ public class ItemWarehouse {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getItemId() {
-        return this.itemId;
-    }
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
     }
 
     public long getAmount() {
