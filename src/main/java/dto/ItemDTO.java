@@ -47,4 +47,12 @@ public class ItemDTO {
     private void setPrice(long price) {
         this.price = price;
     }
+    
+    public long getAmount() {
+        return this.amount;
+    }
+
+    private void setAmount(long amount) {
+        this.amount = amount;
+    }
 }
