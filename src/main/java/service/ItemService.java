@@ -29,7 +29,7 @@ public class ItemService {
         logger.info("Created item " + itemAdditionDTO.getName());
 
         Gson gson = new Gson();
-        String json = gson.toJson(new ItemDTO(item));
+        String json = gson.toJson(new ItemDTO(item, itemWarehouse.getAmount()));
         return json;
     }
 
