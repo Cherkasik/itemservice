@@ -7,7 +7,7 @@
         <id name="id" type="java.lang.Long">
             <generator class="increment" />
         </id>
-        <property name="itemId" type="java.lang.Long" column="item_id" />
+        <property name="itemId" type="java.lang.Long" column="item_id" unique="true" />
         <property name="amount" type="java.lang.Long" column="amount" />
         <property name="reservedAmount" type="java.lang.Long" column="reserved_amount" />
     </class>
