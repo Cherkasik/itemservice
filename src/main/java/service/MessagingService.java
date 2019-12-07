@@ -69,6 +69,7 @@ public class MessagingService {
     };
 
     public void broadcastResponse (long itemId, String exchangeName, long amount, Long orderId) throws Exception {
+        logger.info("Response with itemId - " + itemId + ", exchangeName - " + exchangeName + " amount - " + amount + ", orderId - " + orderId);
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         try (Connection connection = factory.newConnection();

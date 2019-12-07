@@ -80,4 +80,21 @@ public class ItemDAO {
             sfService.closeSession(session);
         }
     }
+
+    public void update(Item obj) {
+        Session session = null;
+        try {
+            session = sfService.getOpenedSession();
+            session.beginTransaction();
+            session.update(obj);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+            logger.error(e);
+        } finally {
+            sfService.closeSession(session);
+        }
+    }
 }

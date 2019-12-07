@@ -2,7 +2,6 @@ import static spark.Spark.*;
 
 import com.google.gson.Gson;
 import dao.ItemDAO;
-import dao.ItemWarehouseDAO;
 import dto.ItemDTO;
 import service.ItemService;
 import service.SessionFactoryService;
@@ -15,7 +14,6 @@ public class Main {
     private static MessagingService messagingService = new MessagingService();
 	private static ItemService itemService = new ItemService(
         new ItemDAO(new SessionFactoryService()),
-        new ItemWarehouseDAO(new SessionFactoryService()),
         messagingService
         );
 

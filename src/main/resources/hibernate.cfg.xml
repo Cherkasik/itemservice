@@ -14,6 +14,5 @@
         <property name="hibernate.connection.username">example</property>
         <property name="hibernate.connection.password">example</property>
         <mapping resource="item.hbm.xml"/>
-        <mapping resource="itemWarehouse.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

@@ -7,6 +7,7 @@ public class ItemDTO {
     private String name;
     private long price;
     private long amount = 0;
+    private long reservedAmount = 0;
 
     public ItemDTO() {}
 
@@ -14,14 +15,8 @@ public class ItemDTO {
         this.id = item.getId();
         this.name = item.getName();
         this.price = item.getPrice();
-        this.amount = 0;
-    }
-
-    public ItemDTO(Item item, long amount) {
-        this.id = item.getId();
-        this.name = item.getName();
-        this.price = item.getPrice();
-        this.amount = amount;
+        this.amount = item.getAmount();
+        this.reservedAmount = item.getReservedAmount();
     }
 
     public long getId() {
@@ -54,5 +49,13 @@ public class ItemDTO {
 
     private void setAmount(long amount) {
         this.amount = amount;
+    }
+
+    public long getReservedAmount() {
+        return this.reservedAmount;
+    }
+
+    private void setReservedAmount(long reservedAmount) {
+        this.reservedAmount = reservedAmount;
     }
 }

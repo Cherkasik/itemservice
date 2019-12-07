@@ -12,17 +12,18 @@ public class Item {
     public Item() {}
 
     public Item(ItemDTO itemDTO) {
+        this.id = itemDTO.getId();
         this.name = itemDTO.getName();
         this.price = itemDTO.getPrice();
         this.amount = itemDTO.getAmount();
         this.reservedAmount = itemDTO.getReservedAmount();
     }
 
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -56,5 +57,13 @@ public class Item {
 
     public void setReservedAmount(long reservedAmount) {
         this.reservedAmount = reservedAmount;
+    }
+
+    public void changeAmount(long amount) {
+        this.amount += amount;
+    }
+
+    public void changeReservedAmount(long reservedAmount) {
+        this.reservedAmount += reservedAmount;
     }
 }
