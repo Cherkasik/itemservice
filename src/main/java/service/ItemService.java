@@ -24,6 +24,12 @@ public class ItemService {
         itemDAO.save(item);
         logger.info("Created item " + itemAdditionDTO.getName());
 
+        try {
+            messagingService.broadcastResponseItemAdded(item.getId(), item.getName(), item.getPrice());
+        }
+        catch (Exception err) {
+            logger.error(err.getMessage());
+        }
         Gson gson = new Gson();
         String json = gson.toJson(new ItemDTO(item));
         return json;

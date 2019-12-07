@@ -88,4 +88,26 @@ public class MessagingService {
             logger.info("[Item Service] Sent '" + message + "'");
         }
     }
+
+    public void broadcastResponseItemAdded (long itemId, String itemName, long price) throws Exception {
+        logger.info("Item added with itemId - " + itemId + ", name - " + itemName + " price - " + price);
+        String exchangeName = "itemAdded";
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel()) {
+            channel.exchangeDeclare(exchangeName, "fanout");
+
+            JsonObject json = new JsonObject();
+            json.addProperty("type", exchangeName);
+            json.addProperty("itemId", itemId);
+            json.addProperty("name", itemName);
+            json.addProperty("price", price);
+
+            String message = json.toString();
+
+            channel.basicPublish(exchangeName, "", MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes("UTF-8"));
+            logger.info("[Item Service] Sent '" + message + "'");
+        }
+    }
 }
