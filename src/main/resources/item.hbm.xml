@@ -9,5 +9,7 @@
         </id>
         <property name="name" column="name" type="java.lang.String"></property>
         <property name="price" column="price" type="java.lang.Long"/>
+        <property name="amount" column="amount" type="java.lang.Long"/>
+        <property name="reservedAmount" column="reserved_amount" type="java.lang.Long"/>
     </class>
 </hibernate-mapping>

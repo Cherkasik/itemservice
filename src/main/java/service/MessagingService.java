@@ -17,8 +17,8 @@ public class MessagingService {
 
     public void setupListener(ItemService itemService) {
         String EXCHANGE_NAME_CHANGE = "changeItemAmount";
-        String EXCHANGE_NAME_RELEASE = "reserveItems";
-        String EXCHANGE_NAME_RESERVE = "releaseItems";
+        String EXCHANGE_NAME_RELEASE = "releaseItems";
+        String EXCHANGE_NAME_RESERVE = "reserveItems";
         String QUEUE_NAME = "ItemService";
 
         ConnectionFactory factory = new ConnectionFactory();
@@ -88,11 +88,3 @@ public class MessagingService {
         }
     }
 }
-
-/*
-finally изменить на что-то
-Переполучение сообщения от Rabbit
-сделать все не static
-одиночное объявления connection, exchangeDeclare
-Все поднять и подергать через рест на паре, видеть все изменения и логи
-*/
