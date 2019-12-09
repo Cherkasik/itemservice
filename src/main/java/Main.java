@@ -30,7 +30,7 @@ public class Main {
                         return itemService.getItemDTOById(Long.parseLong(req.params("itemId")));
                     } catch (Throwable e) {
                         logger.error(e.getMessage());
-                        return "Error" + e.getMessage();
+                        return "{ message: Error " + e.getMessage() + " }";
                     }
                 }
         );
@@ -46,7 +46,7 @@ public class Main {
                 return itemService.addExistingItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
             } catch (Throwable e) {
                 logger.error(e.getMessage());
-                return "Error" + e.getMessage();
+                return "{ message: Error " + e.getMessage() + " }";
             }
         }
         );
@@ -57,7 +57,7 @@ public class Main {
                 return itemService.changeItemAmount(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")), null);
             } catch (Throwable e) {
                 logger.error(e.getMessage());
-                return "Error" + e.getMessage();
+                return "{ message: Error " + e.getMessage() + " }";
             }
         }
         );
@@ -68,7 +68,7 @@ public class Main {
                 return itemService.reserveItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")), null);
             } catch (Throwable e) {
                 logger.error(e.getMessage());
-                return "Error" + e.getMessage();
+                return "{ message: Error " + e.getMessage() + " }";
             }
         }
         );
@@ -79,7 +79,7 @@ public class Main {
                 return itemService.releaseItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")), null);
             } catch (Throwable e) {
                 logger.error(e.getMessage());
-                return "Error" + e.getMessage();
+                return "{ message: Error " + e.getMessage() + " }";
             }
         }
         );
