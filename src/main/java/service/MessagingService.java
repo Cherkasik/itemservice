@@ -19,6 +19,7 @@ public class MessagingService {
         String EXCHANGE_NAME_CHANGE = "changeItemAmount";
         String EXCHANGE_NAME_RELEASE = "itemRemovedFromOrder";
         String EXCHANGE_NAME_RESERVE = "itemAddedToOrder";
+        String EXCHANGE_NAME_BOUGHT = "itemBought";
         String QUEUE_NAME = "ItemService";
 
         ConnectionFactory factory = new ConnectionFactory();
@@ -30,14 +31,16 @@ public class MessagingService {
             connection = factory.newConnection();
             channel = connection.createChannel();
             channel.exchangeDeclare(EXCHANGE_NAME_CHANGE, "direct");
-            channel.exchangeDeclare(EXCHANGE_NAME_RELEASE, "direct");
-            channel.exchangeDeclare(EXCHANGE_NAME_RESERVE, "direct");
+            channel.exchangeDeclare(EXCHANGE_NAME_RELEASE, "fanout");
+            channel.exchangeDeclare(EXCHANGE_NAME_RESERVE, "fanout");
+            channel.exchangeDeclare(EXCHANGE_NAME_BOUGHT, "fanout");
 
             channel.queueDeclare(QUEUE_NAME, true, false, false, null);
 
             channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_CHANGE, "ItemService");
-            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_RELEASE, "ItemService");
-            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_RESERVE, "ItemService");
+            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_RELEASE, "OrderService");
+            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_RESERVE, "OrderService");
+            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_BOUGHT, "OrderService");
 
             logger.info(QUEUE_NAME + " waiting for messages");
 
@@ -56,6 +59,9 @@ public class MessagingService {
                     };
                     if (dto.getType().equals(EXCHANGE_NAME_RELEASE)) {
                         itemService.releaseItems(dto.getId(), dto.getAmount(), dto.getOrderId());
+                    };
+                    if (dto.getType().equals(EXCHANGE_NAME_BOUGHT)) {
+                        itemService.changeItemAmount(dto.getId(), -dto.getAmount(), dto.getOrderId());
                     };
                 } finally {
                     channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
