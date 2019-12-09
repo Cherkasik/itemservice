@@ -17,8 +17,8 @@ public class MessagingService {
 
     public void setupListener(ItemService itemService) {
         String EXCHANGE_NAME_CHANGE = "changeItemAmount";
-        String EXCHANGE_NAME_RELEASE = "releaseItems";
-        String EXCHANGE_NAME_RESERVE = "reserveItems";
+        String EXCHANGE_NAME_RELEASE = "itemRemovedFromOrder";
+        String EXCHANGE_NAME_RESERVE = "itemAddedToOrder";
         String QUEUE_NAME = "ItemService";
 
         ConnectionFactory factory = new ConnectionFactory();
