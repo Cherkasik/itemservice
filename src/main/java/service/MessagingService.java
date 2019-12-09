@@ -38,9 +38,9 @@ public class MessagingService {
             channel.queueDeclare(QUEUE_NAME, true, false, false, null);
 
             channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_CHANGE, "ItemService");
-            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_RELEASE, "OrderService");
-            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_RESERVE, "OrderService");
-            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_BOUGHT, "OrderService");
+            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_RELEASE, "");
+            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_RESERVE, "");
+            channel.queueBind(QUEUE_NAME, EXCHANGE_NAME_BOUGHT, "");
 
             logger.info(QUEUE_NAME + " waiting for messages");
 
