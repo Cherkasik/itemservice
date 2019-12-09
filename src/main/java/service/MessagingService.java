@@ -91,7 +91,7 @@ public class MessagingService {
 
     public void broadcastResponseItemAdded (long itemId, String itemName, long price) throws Exception {
         logger.info("Item added with itemId - " + itemId + ", name - " + itemName + " price - " + price);
-        String exchangeName = "itemAdded";
+        String exchangeName = "itemAddedToWarehouse";
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         try (Connection connection = factory.newConnection();
