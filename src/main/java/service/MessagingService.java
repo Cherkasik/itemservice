@@ -106,7 +106,7 @@ public class MessagingService {
 
             JsonObject json = new JsonObject();
             json.addProperty("type", exchangeName);
-            json.addProperty("itemId", itemId);
+            json.addProperty("id", itemId);
             json.addProperty("name", itemName);
             json.addProperty("price", price);
 
