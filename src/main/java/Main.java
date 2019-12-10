@@ -1,6 +1,6 @@
 import static spark.Spark.*;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import dao.ItemDAO;
 import dto.ItemDTO;
 import service.ItemService;
@@ -16,6 +16,8 @@ public class Main {
         new ItemDAO(new SessionFactoryService()),
         messagingService
         );
+    private static GsonBuilder builder = new GsonBuilder();
+	private static Gson gson = builder.create();
 
     public static void main(String[] args) {
         messagingService.setupListener(itemService);
@@ -30,7 +32,7 @@ public class Main {
                         return itemService.getItemDTOById(Long.parseLong(req.params("itemId")));
                     } catch (Throwable e) {
                         logger.error(e.getMessage());
-                        return "{ message: Error " + e.getMessage() + " }";
+                        return gson.toJson(e.getMessage());
                     }
                 }
         );
@@ -46,7 +48,7 @@ public class Main {
                 return itemService.addExistingItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")));
             } catch (Throwable e) {
                 logger.error(e.getMessage());
-                return "{ message: Error " + e.getMessage() + " }";
+                return gson.toJson(e.getMessage());
             }
         }
         );
@@ -57,7 +59,7 @@ public class Main {
                 return itemService.changeItemAmount(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")), null);
             } catch (Throwable e) {
                 logger.error(e.getMessage());
-                return "{ message: Error " + e.getMessage() + " }";
+                return gson.toJson(e.getMessage());
             }
         }
         );
@@ -68,7 +70,7 @@ public class Main {
                 return itemService.reserveItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")), null);
             } catch (Throwable e) {
                 logger.error(e.getMessage());
-                return "{ message: Error " + e.getMessage() + " }";
+                return gson.toJson(e.getMessage());
             }
         }
         );
@@ -79,7 +81,7 @@ public class Main {
                 return itemService.releaseItems(Long.parseLong(req.params("itemId")), Long.parseLong(req.params("amount")), null);
             } catch (Throwable e) {
                 logger.error(e.getMessage());
-                return "{ message: Error " + e.getMessage() + " }";
+                return gson.toJson(e.getMessage());
             }
         }
         );
