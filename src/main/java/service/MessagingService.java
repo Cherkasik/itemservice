@@ -23,7 +23,7 @@ public class MessagingService {
         String QUEUE_NAME = "ItemService";
 
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost("rabbitmq");
         Connection connection;
         Channel channel;
 

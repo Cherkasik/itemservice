@@ -9,7 +9,7 @@
 		org.postgresql.Driver
 	</property>
 	<property name="hibernate.connection.url">
-		jdbc:postgresql://localhost:5432/item_db
+		jdbc:postgresql://itemdb:5432/item_db
 	</property>
         <property name="hibernate.connection.username">example</property>
         <property name="hibernate.connection.password">example</property>
