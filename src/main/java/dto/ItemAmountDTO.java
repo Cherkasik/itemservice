@@ -32,11 +32,11 @@ public class ItemAmountDTO {
     }
 
     public long getOrderId() {
-        return this.id;
+        return this.orderId;
     }
 
     private void setOrderId(Long id) {
-        this.id = id;
+        this.id = orderId;
     }
 
     public String getType() {
