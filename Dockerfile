@@ -1,5 +1,6 @@
-FROM gradle:4.7.0-jdk8-alpine
+FROM gradle:4.10.0-jdk8-alpine
 
+RUN rm -rf /home/gradle/src
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-CMD [ "./gradlew", "build" ]
+RUN ./gradlew build
